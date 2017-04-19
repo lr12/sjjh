@@ -52,7 +52,7 @@ public class QueueBank {
      */
     private Date receiveRequestTime;
     /**
-     * 调用业务系统时间
+     * 调用协调系统时间
      */
     private Date sendRequestTime;
     /**

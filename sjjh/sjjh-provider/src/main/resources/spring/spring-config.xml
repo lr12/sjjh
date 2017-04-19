@@ -42,7 +42,7 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd
         <context:exclude-filter type="annotation" expression="nju.software.sjjh.annotation.SjjhTask" />
     </context:component-scan>
     <!-- 启动银行定时任务 -->
-    <!--<context:component-scan base-package="nju.software.sjjh.bank.task"/>-->
+    <context:component-scan base-package="nju.software.sjjh.bank.task"/>
 
 
     <bean id="sessionFactory"

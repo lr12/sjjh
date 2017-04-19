@@ -23,14 +23,14 @@ public class BankTask {
     @Scheduled(cron = "0/5 * *  * * ?")
     public void sendRequest() {
         log.info("BankTask : sendRequest");
-        bankService.sendRequest();
+        bankService.sendRequest(BankService.PRIORITY_DEFAULT);
     }
 
 
     @Scheduled(cron = "0/5 * *  * * ?")
     public void sendResponse() {
         log.info("BankTask : sendResponse");
-        bankService.sendResponse();
+        bankService.sendResponse(BankService.PRIORITY_DEFAULT);
     }
 
 
