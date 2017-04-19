@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:task="http://www.springframework.org/schema/task" xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/task
+http://www.springframework.org/schema/task/spring-task-3.1.xsd
+
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd"
+       default-lazy-init="false">
+
+    <!-- 启用缓存注解功能，这个是必须的，否则注解不会生效，另外，该注解一定要声明在spring主配置文件中才会生效 -->
+    <cache:annotation-driven cache-manager="ehcacheManager"/>
+    <!-- cacheManager工厂类，指定ehcache.xml的位置 -->
+    <bean id="ehcacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+    </bean>
+    <!-- 声明cacheManager -->
+    <bean id="ehcacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehcacheManagerFactory"/>
+    </bean>
+
+    <!-- 加载资源文件 -->
+    <!--<context:property-placeholder location="classpath:properties/jdbc.properties"/>-->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:properties/jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
+    <!-- 使用annotation 自动注册bean,并保证@Required,@Autowired的属性被注入 -->
+    <context:annotation-config/>
+    <!-- 定时任务使用注解 -->
+    <task:annotation-driven/>
+
+    <context:component-scan base-package="nju.software.sjjh">
+        <!-- 排除定时任务，防止都启动 -->
+        <context:exclude-filter type="annotation" expression="nju.software.sjjh.annotation.SjjhTask" />
+    </context:component-scan>
+    <!-- 启动银行定时任务 -->
+    <!--<context:component-scan base-package="nju.software.sjjh.bank.task"/>-->
+
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <!--<property name="dataSource" ref="dataSource"/>-->
+        <property name="dataSource" ref="mDataSource"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.connection.release_mode">after_transaction</prop>
+                <prop key="hibernate.transaction.auto_close_session">true</prop>
+             <!--   <prop key="hibernate.hbm2ddl.auto">create</prop> -->
+            </props>
+        </property>
+        <property name="packagesToScan">
+            <list>
+                <value>nju.software.sjjh.bank.entity</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 数据源 -->
+    <bean id="mDataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="connectionTestQuery" value="${hikaricp.connectionTestQuery}"/>
+        <property name="connectionTimeout" value="${hikaricp.connectionTimeout}"/>
+        <property name="idleTimeout" value="${hikaricp.idleTimeout}"/>
+        <property name="maxLifetime" value="${hikaricp.maxLifetime}"/>
+        <property name="maximumPoolSize" value="${hikaricp.maximumPoolSize}"/>
+        <property name="minimumIdle" value="${hikaricp.minimumIdle}"/>
+    </bean>
+
+    <!-- 事务管理器配置 -->
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- 加入spring提供的事务管理机制，线程绑定session -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+</beans>
