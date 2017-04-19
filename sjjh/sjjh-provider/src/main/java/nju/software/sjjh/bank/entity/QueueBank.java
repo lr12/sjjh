@@ -12,42 +12,74 @@ import javax.persistence.*;
  * Created by Nekonekod on 2017/4/17.
  */
 @Entity
-@Table(name="QUEUE_BANK")
+@Table(name = "QUEUE_BANK")
 public class QueueBank {
 
-    /**主键*/
+    /**
+     * 主键
+     */
     private String uuid;
-    /**接口标识符*/
+    /**
+     * 接口标识符
+     */
     private String interfaceId;
-    /**请求标识*/
+    /**
+     * 请求标识
+     */
     private String requestId;
-    /**响应标识*/
+    /**
+     * 响应标识
+     */
     private String responseId;
-    /**查询标识*/
+    /**
+     * 查询标识
+     */
     private String queryId;
-    /**状态*/
+    /**
+     * 状态
+     */
     private String status;
-    /**发起方*/
+    /**
+     * 发起方
+     */
     private String requester;
-    /**回复方*/
+    /**
+     * 回复方
+     */
     private String replier;
-    /**接收请求时间*/
+    /**
+     * 接收请求时间
+     */
     private Date receiveRequestTime;
-    /**调用业务系统时间*/
+    /**
+     * 调用业务系统时间
+     */
     private Date sendRequestTime;
-    /**接收回复时间*/
+    /**
+     * 接收回复时间
+     */
     private Date receiveResponseTime;
-    /**通知回复时间*/
+    /**
+     * 通知回复时间
+     */
     private Date sendResponseTime;
-    /**解析后的参数*/
+    /**
+     * 解析后的查询参数
+     */
     private String decodedParam;
-    /**优先级*/
+    /**
+     * 解析后的查询结果
+     */
+    private String decodedResult;
+    /**
+     * 优先级
+     */
     private Integer priority;
 
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid",strategy = "uuid")
-    @Column(name = "UUID", nullable = false,unique = true)
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @Column(name = "UUID", nullable = false, unique = true)
     public String getUuid() {
         return uuid;
     }
@@ -65,7 +97,7 @@ public class QueueBank {
         this.interfaceId = interfaceId;
     }
 
-   
+
     @Column(name = "QUERY_ID")
     public String getQueryId() {
         return queryId;
@@ -102,7 +134,6 @@ public class QueueBank {
         this.replier = replier;
     }
 
-   
 
     @Column(name = "DECODED_PARAM")
     public String getDecodedParam() {
@@ -122,59 +153,66 @@ public class QueueBank {
         this.priority = priority;
     }
 
-    @Column(name="REQUEST_ID")
-	public String getRequestId() {
-		return requestId;
-	}
+    @Column(name = "REQUEST_ID")
+    public String getRequestId() {
+        return requestId;
+    }
 
-	public void setRequestId(String requestId) {
-		this.requestId = requestId;
-	}
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
 
-	@Column(name="RESPONSE_ID")
-	public String getResponseId() {
-		return responseId;
-	}
+    @Column(name = "RESPONSE_ID")
+    public String getResponseId() {
+        return responseId;
+    }
 
-	public void setResponseId(String responseId) {
-		this.responseId = responseId;
-	}
+    public void setResponseId(String responseId) {
+        this.responseId = responseId;
+    }
 
-	@Column(name="RECEIVE_REQUEST_TIME")
-	public Date getReceiveRequestTime() {
-		return receiveRequestTime;
-	}
+    @Column(name = "RECEIVE_REQUEST_TIME")
+    public Date getReceiveRequestTime() {
+        return receiveRequestTime;
+    }
 
-	public void setReceiveRequestTime(Date receiveRequestTime) {
-		this.receiveRequestTime = receiveRequestTime;
-	}
+    public void setReceiveRequestTime(Date receiveRequestTime) {
+        this.receiveRequestTime = receiveRequestTime;
+    }
 
-	@Column(name="SEND_REQUEST_TIME")
-	public Date getSendRequestTime() {
-		return sendRequestTime;
-	}
+    @Column(name = "SEND_REQUEST_TIME")
+    public Date getSendRequestTime() {
+        return sendRequestTime;
+    }
 
-	public void setSendRequestTime(Date sendRequestTime) {
-		this.sendRequestTime = sendRequestTime;
-	}
+    public void setSendRequestTime(Date sendRequestTime) {
+        this.sendRequestTime = sendRequestTime;
+    }
 
-	@Column(name="RECEIVE_RESPONSE_TIME")
-	public Date getReceiveResponseTime() {
-		return receiveResponseTime;
-	}
+    @Column(name = "RECEIVE_RESPONSE_TIME")
+    public Date getReceiveResponseTime() {
+        return receiveResponseTime;
+    }
 
-	public void setReceiveResponseTime(Date receiveResponseTime) {
-		this.receiveResponseTime = receiveResponseTime;
-	}
+    public void setReceiveResponseTime(Date receiveResponseTime) {
+        this.receiveResponseTime = receiveResponseTime;
+    }
 
-	@Column(name="SEND_RESPONSE_TIME")
-	public Date getSendResponseTime() {
-		return sendResponseTime;
-	}
+    @Column(name = "SEND_RESPONSE_TIME")
+    public Date getSendResponseTime() {
+        return sendResponseTime;
+    }
 
-	public void setSendResponseTime(Date sendResponseTime) {
-		this.sendResponseTime = sendResponseTime;
-	}
-    
-    
+    public void setSendResponseTime(Date sendResponseTime) {
+        this.sendResponseTime = sendResponseTime;
+    }
+
+    @Column(name = "DECODED_RESULT")
+    public String getDecodedResult() {
+        return decodedResult;
+    }
+
+    public void setDecodedResult(String decodedResult) {
+        this.decodedResult = decodedResult;
+    }
 }
