@@ -233,8 +233,12 @@
             <artifactId>tomcat-embed-logging-juli</artifactId>
             <version>8.0.11</version>
         </dependency>
-
-
+        <!-- webservice -->
+        <dependency>
+            <groupId>axis</groupId>
+            <artifactId>axis</artifactId>
+            <version>1.4</version>
+        </dependency>
         <!-- zookeeper-->
         <dependency>
             <groupId>org.apache.zookeeper</groupId>

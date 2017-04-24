@@ -1,7 +1,9 @@
 package nju.software.sjjh.dao;
 
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.connection.ConnectionProvider;
 import org.hibernate.engine.SessionFactoryImplementor;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -14,6 +16,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -63,6 +66,7 @@ public abstract class BaseDao<T> extends HibernateDaoSupport {
     public void update(T entity){
         getHibernateTemplate().update(entity);
     }
+
 
     /**
      * 根据属性名称和属性值查找

@@ -1,19 +1,18 @@
 package nju.software.sjjh.bank.entity;
 
 
-import java.util.Date;
-
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
- * 请求队列-银行
+ * 错误队列-银行
  * Created by Nekonekod on 2017/4/17.
  */
 @Entity
-@Table(name = "QUEUE_BANK")
-public class QueueBank {
+@Table(name = "ERROR_QUEUE_BANK")
+public class ErrorQueueBank {
 
     /**
      * 主键
@@ -75,10 +74,20 @@ public class QueueBank {
      * 优先级
      */
     private Integer priority;
+    /**
+     * 错误次数
+     */
+    private Integer errorCount;
+    /**
+     * 错误信息
+     */
+    private String errorMessage;
+    /**
+     * 是否忽略
+     */
+    private String ignore;
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid")
     @Column(name = "UUID", nullable = false, unique = true)
     public String getUuid() {
         return uuid;
@@ -214,5 +223,32 @@ public class QueueBank {
 
     public void setDecodedResult(String decodedResult) {
         this.decodedResult = decodedResult;
+    }
+
+    @Column(name = "ERROR_COUNT")
+    public Integer getErrorCount() {
+        return errorCount;
+    }
+
+    public void setErrorCount(Integer errorCount) {
+        this.errorCount = errorCount;
+    }
+
+    @Column(name = "ERROR_MESSAGE")
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    @Column(name = "IGNORE",length = 2)
+    public String getIgnore() {
+        return ignore;
+    }
+
+    public void setIgnore(String ignore) {
+        this.ignore = ignore;
     }
 }

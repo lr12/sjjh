@@ -39,16 +39,6 @@ public interface BankService {
     int PRIORITY_DEFAULT = 0;
 
     /**
-     * 发送请求到银行ws
-     */
-    void sendRequest(int priority);
-
-    /**
-     * 通知回复到法院ws
-     */
-    void sendResponse(int priority);
-
-    /**
      * 添加查询账户余额请求
      * @param params
      * @return

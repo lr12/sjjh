@@ -31,8 +31,11 @@
             memoryStoreEvictionPolicy="LRU"
     />
 
-    <!-- 文书类别 缓存 -->
+    <!-- 测试 缓存 -->
     <cache name="TEST_CACHE" maxElementsInMemory="10000" timeToLiveSeconds="1800"/>
+
+    <!-- 代码_银行 -->
+    <cache name="CODE_BANK" maxElementsInMemory="10000" timeToLiveSeconds="1800"/>
 
 
 </ehcache>
