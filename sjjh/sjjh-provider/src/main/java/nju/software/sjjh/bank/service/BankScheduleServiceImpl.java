@@ -55,13 +55,14 @@ public class BankScheduleServiceImpl implements BankScheduleService {
                 List<SendRequestModel> models = future.get();
                 for(SendRequestModel model:models){
                     Result result = model.getResult();
-                    //判断是否接收成功
+                    //获取查询标识集合
                     List<QueueBank> toUpdate = model.getRequests();
                     List<String> queryIds = CollectionUtil.mapping(toUpdate, new CollectionUtil.MappingCallback<QueueBank, String>() {
                         public String map(QueueBank queueBank) {
                             return queueBank.getQueryId();
                         }
                     });
+                    //判断是否接收成功
                     if(result!=null && result.getValue()!=null && result.getValue()==1){
                         //成功：更新请求
                         queueBankDao.updateForSendRequest(BankService.STATUS_SEND_REQUEST,new Date(),queryIds);

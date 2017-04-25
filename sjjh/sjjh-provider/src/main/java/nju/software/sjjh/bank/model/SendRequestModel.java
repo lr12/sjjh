@@ -34,11 +34,22 @@ public class SendRequestModel {
     private Result result;
 
 
+    public String getXml() {
+        return xml;
+    }
+
+    public List<QueueBank> getRequests() {
+        return requests;
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
     /**
      * 重组最大数目
      */
     private static final int QUERY_MAXSIZE = 10;
-
 
     /**
      * 重组请求
@@ -46,7 +57,7 @@ public class SendRequestModel {
      * @param maxSize 一个请求的最大查询数
      * @return
      */
-    public static List<SendRequestModel> rebuildRequest(List<QueueBank> list,int maxSize){
+    private static List<SendRequestModel> rebuildRequest(List<QueueBank> list, int maxSize){
         int modelSize = (int) Math.ceil(list.size()/(double)maxSize);
         List<SendRequestModel> results = new ArrayList<>(modelSize);
         for (int i=0;i<modelSize;i++){
@@ -118,16 +129,5 @@ public class SendRequestModel {
         }
     }
 
-    public String getXml() {
-        return xml;
-    }
-
-    public List<QueueBank> getRequests() {
-        return requests;
-    }
-
-    public Result getResult() {
-        return result;
-    }
 
 }
