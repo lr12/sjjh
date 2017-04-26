@@ -20,7 +20,7 @@ public class BankWebServiceImpl implements BankWebService {
     private BankService bankService;
 
     @Override
-    public String requestAsyncZhye(String[] params) {
+    public String requestAsyncZhye(String params) {
         Result result = bankService.requestAsyncZhye(params);
         return XmlUtil.toXml(result);
     }

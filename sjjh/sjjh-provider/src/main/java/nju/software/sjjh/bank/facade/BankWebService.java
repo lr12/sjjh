@@ -14,6 +14,6 @@ public interface BankWebService {
      * @param params
      * @return
      */
-    String requestAsyncZhye(String[] params);
+    String requestAsyncZhye(String params);
 
 }

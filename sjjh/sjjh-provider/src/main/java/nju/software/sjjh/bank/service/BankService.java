@@ -43,7 +43,7 @@ public interface BankService {
      * @param params
      * @return
      */
-    Result requestAsyncZhye(String[] params);
+    Result requestAsyncZhye(String params);
 
     /**
      * 接收查询账户余额恢复

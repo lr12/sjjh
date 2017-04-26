@@ -58,7 +58,7 @@ public class HandleBankParam implements HandleParameter {
 							UuidUtil.generateUuid(), jkbsf, qqlsh, null,
 							zrrMap.get("FY_BS"),
 							BankService.STATUS_RECEIVE_REQUEST, "江西高院", bank,
-							new Date(), null, null, null, null, null,
+							new Date(), null, null, null, zrr.asXML(), null,
 							Integer.valueOf(yxj));
 					queueBanks.add(queueBank);
 				}
@@ -71,14 +71,14 @@ public class HandleBankParam implements HandleParameter {
 							UuidUtil.generateUuid(), jkbsf, qqlsh, null,
 							zzjgMap.get("FY_BS"),
 							BankService.STATUS_RECEIVE_REQUEST, "江西高院", bank,
-							new Date(), null, null, null, null, null,
+							new Date(), null, null, null, zzjg.asXML(), null,
 							Integer.valueOf(yxj));
 					queueBanks.add(queueBank);
 				}
 			}
 		} catch (DocumentException e) {
-			log.error("解析xml出错:" + params);
-			log.error(e.toString());
+			log.error("解析xml出错:" + params, e);
+			// log.error(e.toString());
 			e.printStackTrace();
 		}
 
@@ -88,8 +88,68 @@ public class HandleBankParam implements HandleParameter {
 	@Override
 	public List<QueueBank> analyticResponseParameter(String jkbsf,
 			String params, QueueBankDao queueBankDao) {
-		// TODO Auto-generated method stub
-		return null;
+		List<QueueBank> queueBankList=new ArrayList<>();
+		try {
+			Element responseElement = Dom4jUtil.getRooElement(params);
+
+			Element valueElement = responseElement.element("value");
+			if (valueElement == null || valueElement.getTextTrim() == null
+					|| !valueElement.getTextTrim().equals("1")) {
+				log.error("银行返回的xml有问题" + params);
+				return queueBankList;
+			}
+
+			Element message = responseElement.element("message");
+			if (message != null && message.getTextTrim() != null) {
+				String decodeMessageString = SecretUtil.decode(message
+						.getTextTrim());
+				Element messageElement=Dom4jUtil.getRooElement(decodeMessageString);
+				Map<String, String> map = Dom4jUtil
+						.getAttributeMap(messageElement);
+				//获取任务流水号
+				String rwlsl=map.get("FY_RWLSH");
+				//获取答复书地址
+				String dfsdz=map.get("YH_DFSDZ");
+				Iterator<Element> zrrIterator = Dom4jUtil
+						.getCurrentNameIeraIterator(messageElement, "zrr");
+				Iterator<Element> zzjgIterator = Dom4jUtil
+						.getCurrentNameIeraIterator(messageElement, "zzjg");
+				Date receiveDate=new Date();
+				while (zrrIterator.hasNext()) {
+					Element zrr = zrrIterator.next();
+					Map<String, String> zrrMap = Dom4jUtil.getAttributeMap(zrr);
+					//根据查询标识获取请求队列
+					List<QueueBank> queueBanks=queueBankDao.findByProperty("queryId", zrrMap.get("FY_BS"));
+					if(queueBanks!=null&&queueBanks.size()!=0){
+						QueueBank queueBank=queueBanks.get(0);
+						queueBank.setDecodedResult(zrr.asXML());
+						queueBank.setReceiveResponseTime(receiveDate);
+						queueBank.setResponseId(rwlsl);
+						queueBankList.add(queueBank);
+					}
+					
+				}
+				while (zzjgIterator.hasNext()) {
+					Element zzjg = zzjgIterator.next();
+					Map<String, String> zzjgMap = Dom4jUtil
+							.getAttributeMap(zzjg);
+					//根据查询标识获取请求队列
+					List<QueueBank> queueBanks=queueBankDao.findByProperty("queryId", zzjgMap.get("FY_BS"));
+					if(queueBanks!=null&&queueBanks.size()!=0){
+						QueueBank queueBank=queueBanks.get(0);
+						queueBank.setDecodedResult(zzjg.asXML());
+						queueBank.setReceiveResponseTime(receiveDate);
+						queueBank.setResponseId(rwlsl);
+						queueBankList.add(queueBank);
+					}
+				}
+			}
+		} catch (DocumentException e) {
+			log.error("解析银行xml失败",e);
+			e.printStackTrace();
+		}
+
+		return queueBankList;
 	}
 
 }
