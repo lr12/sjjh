@@ -38,6 +38,18 @@ public class CodeConfig {
      */
     private String remark2;
 
+    public CodeConfig() {
+    }
+
+    public CodeConfig(Integer id, String type, String key, String value, String remark, String remark2) {
+        this.id = id;
+        this.type = type;
+        this.key = key;
+        this.value = value;
+        this.remark = remark;
+        this.remark2 = remark2;
+    }
+
     @Id
     @Column(name = "ID", nullable = false, unique = true)
     public Integer getId() {

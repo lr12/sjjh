@@ -2,9 +2,12 @@ package nju.software.sjjh.bank.model;
 
 import lombok.extern.slf4j.Slf4j;
 import nju.software.sjjh.bank.entity.QueueBank;
-import nju.software.sjjh.util.CollectionUtil;
-import nju.software.sjjh.util.WebServiceUtil;
-import nju.software.sjjh.util.XmlUtil;
+import nju.software.sjjh.exception.BaseAppException;
+import nju.software.sjjh.util.*;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -20,6 +23,10 @@ import java.util.concurrent.Callable;
 @Slf4j
 public class SendRequestModel {
 
+    /**
+     * 回复流水号
+     */
+    private String responseId;
     /**
      * 重组后的xml参数
      */
@@ -46,6 +53,10 @@ public class SendRequestModel {
         return result;
     }
 
+    public String getResponseId() {
+        return responseId;
+    }
+
     /**
      * 重组最大数目
      */
@@ -53,8 +64,8 @@ public class SendRequestModel {
 
     /**
      * 重组请求
-     * @param list
-     * @param maxSize 一个请求的最大查询数
+     * @param list 所有待发送的查询
+     * @param maxSize 一次调用的最大查询数
      * @return
      */
     private static List<SendRequestModel> rebuildRequest(List<QueueBank> list, int maxSize){
@@ -66,15 +77,35 @@ public class SendRequestModel {
             int toIndex = Math.min(fromIndex + maxSize,list.size()-1);
             List<QueueBank> subList = list.subList(fromIndex, toIndex);
             model.requests = new ArrayList<>(subList);
-            model.xml = rebuildXml(subList);
+            try {
+                model.xml = rebuildXml(model);
+            } catch (Exception e) {
+                model.xml = null;
+                model.result = new Result(0,"重组银行查询请求时发生错误:"+e.getMessage());
+                log.error("重组银行查询请求时发生错误:"+e.getMessage(),e);
+            }
             results.add(model);
         }
         return results;
     }
 
-    private static String rebuildXml(List<QueueBank> subList) {
-
-        return "" ;
+    private static String rebuildXml(SendRequestModel model) throws Exception {
+        if(CollectionUtil.isNotEmpty(model.requests)){
+            model.responseId = UuidUtil.generateUuid();
+            //创建一个xml文档
+            Document document = DocumentHelper.createDocument();
+            Element root = DocumentHelper.createElement("request");
+            document.setRootElement(root);
+            //TODO 设置 法院_任务流水号
+            root.addAttribute("FY_RWLSH", model.responseId);
+            for(QueueBank qb:model.requests){
+                Document doc1 = DocumentHelper.parseText(qb.getDecodedParam());
+                Element ele1 = doc1.getRootElement();
+                root.add(ele1);
+            }
+            return document.asXML();
+        }
+        return null ;
     }
 
     /**
@@ -118,16 +149,23 @@ public class SendRequestModel {
                 //按最大数目分组
                 List<SendRequestModel> models = rebuildRequest(requests, QUERY_MAXSIZE);
                 for(SendRequestModel model:models){
-                    //调用银行ws
-                    String resultXml = WebServiceUtil.invode(this.address, interfaceId, "params", model.xml);
-                    //set 返回结果
-                    model.result = XmlUtil.toBean(resultXml, Result.class);
+                    if(StringUtil.isNotBlank(model.xml)){
+                        try{
+                            //调用银行ws
+                            String resultXml = WebServiceUtil.invode(this.address, interfaceId, "params", model.xml);
+                            //set 返回结果
+                            model.result = XmlUtil.toBean(resultXml, Result.class);
+                        }catch (Exception e){
+                            //捕获远程调用时发生的异常
+                            model.result = new Result(0,e.getMessage());
+                        }
+                    }
                     future.add(model);
+                    //休眠50ms
+                    Thread.sleep(50);
                 }
             }
             return future;
         }
     }
-
-
 }

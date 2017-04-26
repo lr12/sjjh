@@ -9,11 +9,15 @@ import nju.software.sjjh.bank.model.Result;
 import nju.software.sjjh.bank.model.SendRequestModel;
 import nju.software.sjjh.dao.CodeConfigDao;
 import nju.software.sjjh.entity.CodeConfig;
+import nju.software.sjjh.exception.BaseAppException;
 import nju.software.sjjh.util.CollectionUtil;
+import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
@@ -35,7 +39,7 @@ public class BankScheduleServiceImpl implements BankScheduleService {
     private QueueBankDao queueBankDao;
 
     @Resource
-    private ErrorQueueBankDao errorQueueBankDao;
+    private BankErrorHandlerScheduleService bankErrorHandlerScheduleService;
 
     @Resource
     private CodeConfigDao codeConfigDao;
@@ -55,32 +59,24 @@ public class BankScheduleServiceImpl implements BankScheduleService {
                 List<SendRequestModel> models = future.get();
                 for(SendRequestModel model:models){
                     Result result = model.getResult();
-                    //获取查询标识集合
                     List<QueueBank> toUpdate = model.getRequests();
-                    List<String> queryIds = CollectionUtil.mapping(toUpdate, new CollectionUtil.MappingCallback<QueueBank, String>() {
-                        public String map(QueueBank queueBank) {
-                            return queueBank.getQueryId();
-                        }
-                    });
                     //判断是否接收成功
                     if(result!=null && result.getValue()!=null && result.getValue()==1){
                         //成功：更新请求
-                        queueBankDao.updateForSendRequest(BankService.STATUS_SEND_REQUEST,new Date(),queryIds);
+                        //获取查询标识集合
+                        List<String> queryIds = CollectionUtil.mapping(toUpdate, new CollectionUtil.MappingCallback<QueueBank, String>() {
+                            public String map(QueueBank queueBank) {
+                                return queueBank.getQueryId();
+                            }
+                        });
+                        queueBankDao.updateForSendRequest(BankService.STATUS_SEND_REQUEST,model.getResponseId(),new Date(),queryIds);
                     }else{
-                        //失败：添加到错误队列并更新请求状态为错误
-                        for(QueueBank qb:toUpdate){
-                            ErrorQueueBank eqb = new ErrorQueueBank();
-                            BeanUtils.copyProperties(qb,eqb);
-                            eqb.setErrorCount(1);
-                            String errorMessage = model.getResult() != null ? model.getResult().getMessage() : "未响应成功";
-                            eqb.setErrorMessage(errorMessage);
-                            eqb.setIgnore("N");
-                            errorQueueBankDao.save(eqb);
-                        }
-                        queueBankDao.updateForError(BankService.STATUS_ERROR,queryIds);
+                        //失败：添加到错误队列
+                        String errorMessage = model.getResult() != null ? model.getResult().getMessage() : "未响应成功";
+                        bankErrorHandlerScheduleService.addToErrorQueue(toUpdate,errorMessage);
                     }
                 }
-            } catch (InterruptedException | ExecutionException e) {
+            } catch (Exception e) {
                 log.error(e.getMessage(),e);
             }
         }

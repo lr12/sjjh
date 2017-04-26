@@ -37,14 +37,16 @@ public class QueueBankDao extends BaseDao<QueueBank> {
     /**
      * 更新发送请求状态
      * @param status 更新后状态
+     * @param responseId 回复流水号
      * @param sendRequestTime 发送请求时间
      * @param queryIds 查询标识
      */
-    public void updateForSendRequest(String status, Date sendRequestTime, List queryIds){
+    public void updateForSendRequest(String status,String responseId, Date sendRequestTime, List queryIds){
         Session session = getSession();
-        Query query = session.createQuery("UPDATE QueueBank SET status = :status ,sendRequestTime = :sendRequestTime " +
+        Query query = session.createQuery("UPDATE QueueBank SET status = :status ,responseId = :responseId ,sendRequestTime = :sendRequestTime " +
                 "WHERE queryId in (:queryIds)")
                 .setParameter("status",status)
+                .setParameter("responseId",responseId)
                 .setParameter("sendRequestTime",sendRequestTime)
                 .setParameterList("queryIds", queryIds);
         query.executeUpdate();
