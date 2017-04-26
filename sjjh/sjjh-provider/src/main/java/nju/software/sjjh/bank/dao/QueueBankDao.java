@@ -65,6 +65,19 @@ public class QueueBankDao extends BaseDao<QueueBank> {
         query.executeUpdate();
     }
 
-
+    /**
+     * 根据查询id和银行标识获取
+     * @param queryId
+     * @param responseId
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+	public List<QueueBank> getRequestByQueryIdAndResponseId(String queryId,String responseId){
+    	return getHibernateTemplate().find(
+                "FROM QueueBank WHERE queryId = ? " +
+                        "AND responseId = ? ",
+                        queryId,
+                        responseId);
+    }
 
 }

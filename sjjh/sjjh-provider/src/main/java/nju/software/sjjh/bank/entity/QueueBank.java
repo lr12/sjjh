@@ -215,4 +215,34 @@ public class QueueBank {
     public void setDecodedResult(String decodedResult) {
         this.decodedResult = decodedResult;
     }
+
+	public QueueBank(String uuid, String interfaceId, String requestId,
+			String responseId, String queryId, String status, String requester,
+			String replier, Date receiveRequestTime, Date sendRequestTime,
+			Date receiveResponseTime, Date sendResponseTime,
+			String decodedParam, String decodedResult, Integer priority) {
+		super();
+		this.uuid = uuid;
+		this.interfaceId = interfaceId;
+		this.requestId = requestId;
+		this.responseId = responseId;
+		this.queryId = queryId;
+		this.status = status;
+		this.requester = requester;
+		this.replier = replier;
+		this.receiveRequestTime = receiveRequestTime;
+		this.sendRequestTime = sendRequestTime;
+		this.receiveResponseTime = receiveResponseTime;
+		this.sendResponseTime = sendResponseTime;
+		this.decodedParam = decodedParam;
+		this.decodedResult = decodedResult;
+		this.priority = priority;
+	}
+
+	public QueueBank() {
+		super();
+	}
+    
+    
+    
 }

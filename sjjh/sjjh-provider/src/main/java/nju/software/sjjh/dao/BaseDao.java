@@ -37,6 +37,13 @@ public abstract class BaseDao<T> extends HibernateDaoSupport {
     }
 
     /**
+     * 更新list
+     * @param entity
+     */
+    public void updateList(List<T> entity){
+    	getHibernateTemplate().saveOrUpdateAll(entity);
+    }
+    /**
      * 根据id获取
      *
      * @param id 主键
