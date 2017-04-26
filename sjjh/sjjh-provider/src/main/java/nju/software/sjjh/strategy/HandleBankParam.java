@@ -92,14 +92,15 @@ public class HandleBankParam implements HandleParameter {
 		try {
 			Element responseElement = Dom4jUtil.getRooElement(params);
 
-			Element valueElement = responseElement.element("value");
-			if (valueElement == null || valueElement.getTextTrim() == null
-					|| !valueElement.getTextTrim().equals("1")) {
+			Element paramElement = responseElement.element("param");
+			if (paramElement == null ) {
 				log.error("银行返回的xml有问题" + params);
 				return queueBankList;
 			}
-
-			Element message = responseElement.element("message");
+			Map<String, String> paramAttributeMap=Dom4jUtil.getAttributeMap(paramElement);
+			//银行标识
+			String yhbs=paramAttributeMap.get("YH_BS");
+			Element message = responseElement.element("result");
 			if (message != null && message.getTextTrim() != null) {
 				String decodeMessageString = SecretUtil.decode(message
 						.getTextTrim());
@@ -118,8 +119,8 @@ public class HandleBankParam implements HandleParameter {
 				while (zrrIterator.hasNext()) {
 					Element zrr = zrrIterator.next();
 					Map<String, String> zrrMap = Dom4jUtil.getAttributeMap(zrr);
-					//根据查询标识获取请求队列
-					List<QueueBank> queueBanks=queueBankDao.findByProperty("queryId", zrrMap.get("FY_BS"));
+					//根据查询标识和银行标识获取请求队列
+					List<QueueBank> queueBanks=queueBankDao.getRequestByQueryIdAndResponseId( zrrMap.get("FY_BS"),yhbs);
 					if(queueBanks!=null&&queueBanks.size()!=0){
 						QueueBank queueBank=queueBanks.get(0);
 						queueBank.setDecodedResult(zrr.asXML());
@@ -133,8 +134,8 @@ public class HandleBankParam implements HandleParameter {
 					Element zzjg = zzjgIterator.next();
 					Map<String, String> zzjgMap = Dom4jUtil
 							.getAttributeMap(zzjg);
-					//根据查询标识获取请求队列
-					List<QueueBank> queueBanks=queueBankDao.findByProperty("queryId", zzjgMap.get("FY_BS"));
+					//根据查询标识和银行标识获取请求队列
+					List<QueueBank> queueBanks=queueBankDao.getRequestByQueryIdAndResponseId( zzjgMap.get("FY_BS"),yhbs);
 					if(queueBanks!=null&&queueBanks.size()!=0){
 						QueueBank queueBank=queueBanks.get(0);
 						queueBank.setDecodedResult(zzjg.asXML());
