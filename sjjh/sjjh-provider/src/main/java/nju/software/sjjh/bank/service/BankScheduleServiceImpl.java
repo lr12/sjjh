@@ -46,6 +46,7 @@ public class BankScheduleServiceImpl implements BankScheduleService {
 
     @Override
     public void sendRequest(int priority) {
+        long startTime = System.currentTimeMillis();
         List<CodeConfig> banks = codeConfigDao.getBanks();
         for (CodeConfig bank:banks) {
             String replierId = bank.getCodeKey();   //协调公司标识
@@ -82,6 +83,8 @@ public class BankScheduleServiceImpl implements BankScheduleService {
                 }
             }
         }
+        long endTime = System.currentTimeMillis();
+        log.info("sendRequest("+priority+") cost time " + (endTime-startTime) + "ms");
     }
 
     @Override

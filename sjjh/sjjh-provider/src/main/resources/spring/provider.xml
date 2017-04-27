@@ -30,6 +30,8 @@
     <!-- here we demonstrate both annotation-based and xml-based configs -->
     <dubbo:annotation package="nju.software.sjjh.bank.facade" />
     <dubbo:annotation package="nju.software.sjjh.webservice" />
+    <!-- 测试:模拟银行的ws-->
+    <dubbo:annotation package="nju.software.sjjh.mock" />
     <!--<dubbo:protocol name="dubbo" serialization="kryo" optimizer="com.alibaba.dubbo.demo.SerializationOptimizerImpl"/>-->
     <!--<dubbo:protocol name="dubbo" serialization="fst" optimizer="com.alibaba.dubbo.demo.SerializationOptimizerImpl"/>-->
 

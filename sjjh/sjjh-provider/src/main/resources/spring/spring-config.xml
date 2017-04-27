@@ -4,8 +4,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:task="http://www.springframework.org/schema/task" xmlns:cache="http://www.springframework.org/schema/cache"
-       xmlns:p="http://www.springframework.org/schema/p"
-        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/context 
 	http://www.springframework.org/schema/context/spring-context-3.0.xsd
@@ -41,18 +40,20 @@
     </bean>
     <!-- 使用annotation 自动注册bean,并保证@Required,@Autowired的属性被注入 -->
     <context:annotation-config/>
-    <!-- 定时任务使用注解 -->
-    <task:annotation-driven/>
-
     <context:component-scan base-package="nju.software.sjjh">
         <!-- 排除定时任务，防止都启动 -->
         <context:exclude-filter type="annotation" expression="nju.software.sjjh.annotation.SjjhTask" />
     </context:component-scan>
+
+    <!-- 定时任务使用注解 -->
+    <task:annotation-driven/>
     <!-- 启动银行定时任务 -->
-    <context:component-scan base-package="nju.software.sjjh.bank.task"/>
-    <bean id="myInterceptor" class="nju.software.sjjh.aop.IexportdInterceptor"/> 
- <!-- 启动@AspectJ支持 -->
+    <!--<context:component-scan base-package="nju.software.sjjh.bank.task"/>-->
+
+    <!-- 启动@AspectJ支持 -->
     <aop:aspectj-autoproxy/>
+
+    <!-- hibernate配置 -->
     <bean id="sessionFactory"
           class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
         <!--<property name="dataSource" ref="dataSource"/>-->
@@ -63,7 +64,7 @@
                 <prop key="hibernate.show_sql">false</prop>
                 <prop key="hibernate.connection.release_mode">after_transaction</prop>
                 <prop key="hibernate.transaction.auto_close_session">true</prop>
-                <!--<prop key="hibernate.hbm2ddl.auto">update</prop>-->
+                <!--<prop key="hibernate.hbm2ddl.auto">create</prop>-->
             </props>
         </property>
         <property name="packagesToScan">

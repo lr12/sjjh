@@ -2,13 +2,10 @@ package nju.software.sjjh.bank.model;
 
 import lombok.extern.slf4j.Slf4j;
 import nju.software.sjjh.bank.entity.QueueBank;
-import nju.software.sjjh.exception.BaseAppException;
 import nju.software.sjjh.util.*;
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
