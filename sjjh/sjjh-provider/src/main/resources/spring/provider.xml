@@ -29,7 +29,7 @@
 
     <!-- here we demonstrate both annotation-based and xml-based configs -->
     <dubbo:annotation package="nju.software.sjjh.bank.facade" />
-
+    <dubbo:annotation package="nju.software.sjjh.webservice" />
     <!--<dubbo:protocol name="dubbo" serialization="kryo" optimizer="com.alibaba.dubbo.demo.SerializationOptimizerImpl"/>-->
     <!--<dubbo:protocol name="dubbo" serialization="fst" optimizer="com.alibaba.dubbo.demo.SerializationOptimizerImpl"/>-->
 

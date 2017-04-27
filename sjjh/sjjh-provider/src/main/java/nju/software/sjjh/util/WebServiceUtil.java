@@ -19,7 +19,7 @@ import java.util.Arrays;
 @Slf4j
 public class WebServiceUtil {
 
-    public static String invode(String address, String funName, String paramName, String paramValue) {
+    public static String invode(String address, String funName, String paramName, String paramValue) throws RemoteException {
         return invoke(address, "", funName, new String[]{paramName}, new String[]{paramValue});
     }
 
@@ -31,7 +31,7 @@ public class WebServiceUtil {
         return invoke(address, "", funName, paramNames, paramValues);
     }
 
-    private static String invoke(String address, String soapAction, String funName, String[] paramNames, String[] paramValues) {
+    private static String invoke(String address, String soapAction, String funName, String[] paramNames, String[] paramValues) throws RemoteException{
         log.warn("调用webservice：" +address + "," + funName);
         try {
             Service s = new Service();

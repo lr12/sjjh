@@ -5,11 +5,18 @@
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:task="http://www.springframework.org/schema/task" xmlns:cache="http://www.springframework.org/schema/cache"
        xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/task
-http://www.springframework.org/schema/task/spring-task-3.1.xsd
-
-	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd"
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	 http://www.springframework.org/schema/task
+     http://www.springframework.org/schema/task/spring-task-3.1.xsd
+  http://www.springframework.org/schema/aop 
+  http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd 
+	http://www.springframework.org/schema/cache
+	 http://www.springframework.org/schema/cache/spring-cache.xsd"
        default-lazy-init="false">
 
     <!-- 启用缓存注解功能，这个是必须的，否则注解不会生效，另外，该注解一定要声明在spring主配置文件中才会生效 -->
@@ -43,8 +50,9 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd
     </context:component-scan>
     <!-- 启动银行定时任务 -->
     <context:component-scan base-package="nju.software.sjjh.bank.task"/>
-
-
+    <bean id="myInterceptor" class="nju.software.sjjh.aop.IexportdInterceptor"/> 
+ <!-- 启动@AspectJ支持 -->
+    <aop:aspectj-autoproxy/>
     <bean id="sessionFactory"
           class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
         <!--<property name="dataSource" ref="dataSource"/>-->
