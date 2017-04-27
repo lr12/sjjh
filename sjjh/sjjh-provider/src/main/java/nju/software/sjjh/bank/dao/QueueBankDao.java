@@ -28,7 +28,7 @@ public class QueueBankDao extends BaseDao<QueueBank> {
                 "FROM QueueBank WHERE replier = ? " +
                         "AND status = ? " +
                         "AND priority = ? " +
-                        "ORDER BY interfaceId,receiveRequestTime ASC ",
+                        "ORDER BY requestInterfaceId,receiveRequestTime ASC ",
                 replier,
                 status,
                 priority);

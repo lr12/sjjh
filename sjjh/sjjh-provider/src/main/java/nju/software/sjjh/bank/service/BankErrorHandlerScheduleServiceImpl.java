@@ -41,7 +41,7 @@ public class BankErrorHandlerScheduleServiceImpl implements BankErrorHandlerSche
             BeanUtils.copyProperties(qb,eqb);
             eqb.setErrorCount(1);
             eqb.setErrorMessage(errorMessage);
-            eqb.setIgnore("N");
+            eqb.setDismiss("N");
             errorQueueBankDao.save(eqb);
         }
         //更细请求表状态

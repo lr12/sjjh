@@ -20,15 +20,15 @@ public class CodeConfig {
     /**
      * 类型
      */
-    private String type;
+    private String codeType;
     /**
      * 键
      */
-    private String key;
+    private String codeKey;
     /**
      * 值
      */
-    private String value;
+    private String codeValue;
     /**
      * 备注
      */
@@ -41,11 +41,11 @@ public class CodeConfig {
     public CodeConfig() {
     }
 
-    public CodeConfig(Integer id, String type, String key, String value, String remark, String remark2) {
+    public CodeConfig(Integer id, String codeType, String codeKey, String codeValue, String remark, String remark2) {
         this.id = id;
-        this.type = type;
-        this.key = key;
-        this.value = value;
+        this.codeType = codeType;
+        this.codeKey = codeKey;
+        this.codeValue = codeValue;
         this.remark = remark;
         this.remark2 = remark2;
     }
@@ -60,31 +60,32 @@ public class CodeConfig {
         this.id = id;
     }
 
-    @Column(name = "TYPE")
-    public String getType() {
-        return type;
+    @Column(name = "CODE_TYPE")
+    public String getCodeType() {
+        return codeType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCodeType(String codeType) {
+        this.codeType = codeType;
     }
 
-    @Column(name = "KEY")
-    public String getKey() {
-        return key;
+
+    @Column(name = "CODE_KEY")
+    public String getCodeKey() {
+        return codeKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setCodeKey(String codeKey) {
+        this.codeKey = codeKey;
     }
 
-    @Column(name = "VALUE")
-    public String getValue() {
-        return value;
+    @Column(name = "CODE_VALUE")
+    public String getCodeValue() {
+        return codeValue;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setCodeValue(String codeValue) {
+        this.codeValue = codeValue;
     }
 
     @Column(name = "REMARK")

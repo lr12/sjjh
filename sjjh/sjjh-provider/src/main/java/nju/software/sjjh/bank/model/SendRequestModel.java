@@ -74,7 +74,7 @@ public class SendRequestModel {
         for (int i=0;i<modelSize;i++){
             SendRequestModel model = new SendRequestModel();
             int fromIndex = i * maxSize;
-            int toIndex = Math.min(fromIndex + maxSize,list.size()-1);
+            int toIndex = Math.min(fromIndex + maxSize,list.size());
             List<QueueBank> subList = list.subList(fromIndex, toIndex);
             model.requests = new ArrayList<>(subList);
             try {
@@ -91,12 +91,12 @@ public class SendRequestModel {
 
     private static String rebuildXml(SendRequestModel model) throws Exception {
         if(CollectionUtil.isNotEmpty(model.requests)){
-            model.responseId = UuidUtil.generateUuid();
             //创建一个xml文档
             Document document = DocumentHelper.createDocument();
             Element root = DocumentHelper.createElement("request");
             document.setRootElement(root);
             //TODO 设置 法院_任务流水号
+            model.responseId = UuidUtil.generateUuid();
             root.addAttribute("FY_RWLSH", model.responseId);
             for(QueueBank qb:model.requests){
                 Document doc1 = DocumentHelper.parseText(qb.getDecodedParam());
@@ -109,14 +109,14 @@ public class SendRequestModel {
     }
 
     /**
-     * 按接口标识分组
+     * 按请求接口标识分组
      * @param all
      * @return
      */
     private static Map<String,List<QueueBank>> tellByInterfaceId(List<QueueBank> all){
         Map<String,List<QueueBank>> map = new LinkedHashMap<>();
         for(QueueBank req:all){
-            String interfaceId = req.getInterfaceId();
+            String interfaceId = req.getResponseInterfaceId();
             if(!map.containsKey(interfaceId)) map.put(interfaceId,new ArrayList<QueueBank>());
             map.get(interfaceId).add(req);
         }
@@ -152,7 +152,8 @@ public class SendRequestModel {
                     if(StringUtil.isNotBlank(model.xml)){
                         try{
                             //调用银行ws
-                            String resultXml = WebServiceUtil.invode(this.address, interfaceId, "params", model.xml);
+//                            String resultXml = WebServiceUtil.invode(this.address, interfaceId, "params", model.xml);
+                            String resultXml = CfxUtil.jump(this.address, interfaceId, model.xml)[0].toString();
                             //set 返回结果
                             model.result = XmlUtil.toBean(resultXml, Result.class);
                         }catch (Exception e){

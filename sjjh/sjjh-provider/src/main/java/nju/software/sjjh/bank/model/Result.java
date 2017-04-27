@@ -26,6 +26,15 @@ public class Result {
         this.message = message;
     }
 
+    public static Result newOkResult(String message){
+        return new Result(1,message);
+    }
+
+    public static Result newErrorResult(String message){
+        return new Result(0,message);
+    }
+
+
     /**
      * 接收成功 value=1 message=""
      */

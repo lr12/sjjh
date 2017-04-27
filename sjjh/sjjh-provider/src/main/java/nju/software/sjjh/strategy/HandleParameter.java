@@ -14,19 +14,19 @@ public interface HandleParameter {
 
 	/**
 	 * 解析请求的参数方法
-	 * @param jkbsf
+	 * @param requestInterfaceId 请求的接口标识
+	 * @param responseInterfaceId 回复的接口标识
 	 * @param params
 	 * @return
 	 */
-	public List<QueueBank> analyticRequestParameter(String jkbsf,String params);
+	public List<QueueBank> analyticRequestParameter(String requestInterfaceId,String responseInterfaceId,String params);
 	
 	
 	/**
 	 * 解析响应参数的方法
-	 * @param jkbsf
 	 * @param params
 	 * @param queueBankDao
 	 * @return
 	 */
-	public List<QueueBank> analyticResponseParameter(String jkbsf,String params,QueueBankDao queueBankDao);
+	public List<QueueBank> analyticResponseParameter(String params,QueueBankDao queueBankDao);
 }

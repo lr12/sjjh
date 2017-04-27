@@ -23,16 +23,16 @@ public class WebServiceUtil {
         return invoke(address, "", funName, new String[]{paramName}, new String[]{paramValue});
     }
 
-    public static String invode(String address, String soapAction, String funName, String paramName, String paramValue) {
+    public static String invode(String address, String soapAction, String funName, String paramName, String paramValue) throws RemoteException  {
         return invoke(address, soapAction, funName, new String[]{paramName}, new String[]{paramValue});
     }
 
-    public static String invode(String address, String funName, String[] paramNames, String[] paramValues) {
+    public static String invode(String address, String funName, String[] paramNames, String[] paramValues) throws RemoteException  {
         return invoke(address, "", funName, paramNames, paramValues);
     }
 
     private static String invoke(String address, String soapAction, String funName, String[] paramNames, String[] paramValues) throws RemoteException{
-        log.warn("调用webservice：" +address + "," + funName);
+        log.warn("调用webservice：" +address + "\n" + funName);
         try {
             Service s = new Service();
             Call call = (Call) s.createCall();
@@ -41,7 +41,7 @@ public class WebServiceUtil {
             call.setTargetEndpointAddress(address);
             for (int i = 0; i < paramNames.length; i++) {
                 String name = paramNames[i];
-                call.addParameter(new QName(soapAction, name), XMLType.XSD_STRING, ParameterMode.IN);
+                call.addParameter(name, XMLType.XSD_STRING, ParameterMode.IN);
             }
             return (String) call.invoke(paramValues);
         } catch (Exception e) {

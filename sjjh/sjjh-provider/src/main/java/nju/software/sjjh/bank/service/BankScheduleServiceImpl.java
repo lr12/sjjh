@@ -48,36 +48,38 @@ public class BankScheduleServiceImpl implements BankScheduleService {
     public void sendRequest(int priority) {
         List<CodeConfig> banks = codeConfigDao.getBanks();
         for (CodeConfig bank:banks) {
-            String replierId = bank.getKey();   //协调公司标识
-            String wsAddress = bank.getValue(); //ws地址
+            String replierId = bank.getCodeKey();   //协调公司标识
+            String wsAddress = bank.getCodeValue(); //ws地址
             //获取所有待发送给银行的请求
             List<QueueBank> requsts = queueBankDao.getRequestByReplierAndStatusAndPriority(
                     replierId, BankService.STATUS_RECEIVE_REQUEST, priority);
             //提交任务
-            Future<List<SendRequestModel>> future = threadPool.submit(new SendRequestModel.SendRequestCallback("send to replier：" + replierId, wsAddress, requsts));
-            try {
-                List<SendRequestModel> models = future.get();
-                for(SendRequestModel model:models){
-                    Result result = model.getResult();
-                    List<QueueBank> toUpdate = model.getRequests();
-                    //判断是否接收成功
-                    if(result!=null && result.getValue()!=null && result.getValue()==1){
-                        //成功：更新请求
-                        //获取查询标识集合
-                        List<String> queryIds = CollectionUtil.mapping(toUpdate, new CollectionUtil.MappingCallback<QueueBank, String>() {
-                            public String map(QueueBank queueBank) {
-                                return queueBank.getQueryId();
-                            }
-                        });
-                        queueBankDao.updateForSendRequest(BankService.STATUS_SEND_REQUEST,model.getResponseId(),new Date(),queryIds);
-                    }else{
-                        //失败：添加到错误队列
-                        String errorMessage = model.getResult() != null ? model.getResult().getMessage() : "未响应成功";
-                        bankErrorHandlerScheduleService.addToErrorQueue(toUpdate,errorMessage);
+            if(CollectionUtil.isNotEmpty(requsts)){
+                Future<List<SendRequestModel>> future = threadPool.submit(new SendRequestModel.SendRequestCallback("send to replier：" + replierId, wsAddress, requsts));
+                try {
+                    List<SendRequestModel> models = future.get();
+                    for(SendRequestModel model:models){
+                        Result result = model.getResult();
+                        List<QueueBank> toUpdate = model.getRequests();
+                        //判断是否接收成功
+                        if(result!=null && result.getValue()!=null && result.getValue()==1){
+                            //成功：更新请求
+                            //获取查询标识集合
+                            List<String> queryIds = CollectionUtil.mapping(toUpdate, new CollectionUtil.MappingCallback<QueueBank, String>() {
+                                public String map(QueueBank queueBank) {
+                                    return queueBank.getQueryId();
+                                }
+                            });
+                            queueBankDao.updateForSendRequest(BankService.STATUS_SEND_REQUEST,model.getResponseId(),new Date(),queryIds);
+                        }else{
+                            //失败：添加到错误队列
+                            String errorMessage = model.getResult() != null ? model.getResult().getMessage() : "未响应成功";
+                            bankErrorHandlerScheduleService.addToErrorQueue(toUpdate,errorMessage);
+                        }
                     }
+                } catch (Exception e) {
+                    log.error(e.getMessage(),e);
                 }
-            } catch (Exception e) {
-                log.error(e.getMessage(),e);
             }
         }
     }

@@ -21,7 +21,7 @@ public class CodeConfigDao extends BaseDao<CodeConfig> {
      */
     @Cacheable("CODE_BANK")
     public List<CodeConfig> getBanks() {
-        return findByProperty("type","银行标识");
+        return findByProperty("codeType","银行标识");
     }
 
 

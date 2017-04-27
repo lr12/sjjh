@@ -20,10 +20,6 @@ public class QueueBank {
      */
     private String uuid;
     /**
-     * 接口标识符
-     */
-    private String interfaceId;
-    /**
      * 请求标识
      */
     private String requestId;
@@ -31,6 +27,14 @@ public class QueueBank {
      * 响应标识
      */
     private String responseId;
+    /**
+     * 请求方接口标识符（通知结果时调用，业务系统提供）
+     */
+    private String requestInterfaceId;
+    /**
+     * 回复方接口标识符（发送请求时调用，协同系统提供）
+     */
+    private String responseInterfaceId;
     /**
      * 查询标识
      */
@@ -88,15 +92,24 @@ public class QueueBank {
         this.uuid = uuid;
     }
 
-    @Column(name = "INTERFACE_ID")
-    public String getInterfaceId() {
-        return interfaceId;
+
+    @Column(name = "REQUEST_INTERFACE_ID")
+    public String getRequestInterfaceId() {
+        return requestInterfaceId;
     }
 
-    public void setInterfaceId(String interfaceId) {
-        this.interfaceId = interfaceId;
+    public void setRequestInterfaceId(String requestInterfaceId) {
+        this.requestInterfaceId = requestInterfaceId;
     }
 
+    @Column(name = "RESPONSE_INTERFACE_ID")
+    public String getResponseInterfaceId() {
+        return responseInterfaceId;
+    }
+
+    public void setResponseInterfaceId(String responseInterfaceId) {
+        this.responseInterfaceId = responseInterfaceId;
+    }
 
     @Column(name = "QUERY_ID",unique = true)
     public String getQueryId() {
@@ -216,33 +229,27 @@ public class QueueBank {
         this.decodedResult = decodedResult;
     }
 
-	public QueueBank(String uuid, String interfaceId, String requestId,
-			String responseId, String queryId, String status, String requester,
-			String replier, Date receiveRequestTime, Date sendRequestTime,
-			Date receiveResponseTime, Date sendResponseTime,
-			String decodedParam, String decodedResult, Integer priority) {
-		super();
-		this.uuid = uuid;
-		this.interfaceId = interfaceId;
-		this.requestId = requestId;
-		this.responseId = responseId;
-		this.queryId = queryId;
-		this.status = status;
-		this.requester = requester;
-		this.replier = replier;
-		this.receiveRequestTime = receiveRequestTime;
-		this.sendRequestTime = sendRequestTime;
-		this.receiveResponseTime = receiveResponseTime;
-		this.sendResponseTime = sendResponseTime;
-		this.decodedParam = decodedParam;
-		this.decodedResult = decodedResult;
-		this.priority = priority;
-	}
 
 	public QueueBank() {
 		super();
 	}
-    
-    
-    
+
+    public QueueBank(String uuid, String requestId, String responseId, String requestInterfaceId, String responseInterfaceId, String queryId, String status, String requester, String replier, Date receiveRequestTime, Date sendRequestTime, Date receiveResponseTime, Date sendResponseTime, String decodedParam, String decodedResult, Integer priority) {
+        this.uuid = uuid;
+        this.requestId = requestId;
+        this.responseId = responseId;
+        this.requestInterfaceId = requestInterfaceId;
+        this.responseInterfaceId = responseInterfaceId;
+        this.queryId = queryId;
+        this.status = status;
+        this.requester = requester;
+        this.replier = replier;
+        this.receiveRequestTime = receiveRequestTime;
+        this.sendRequestTime = sendRequestTime;
+        this.receiveResponseTime = receiveResponseTime;
+        this.sendResponseTime = sendResponseTime;
+        this.decodedParam = decodedParam;
+        this.decodedResult = decodedResult;
+        this.priority = priority;
+    }
 }

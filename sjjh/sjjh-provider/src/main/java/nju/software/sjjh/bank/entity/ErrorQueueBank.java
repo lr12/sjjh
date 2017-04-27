@@ -19,10 +19,6 @@ public class ErrorQueueBank {
      */
     private String uuid;
     /**
-     * 接口标识符
-     */
-    private String interfaceId;
-    /**
      * 请求标识
      */
     private String requestId;
@@ -30,6 +26,14 @@ public class ErrorQueueBank {
      * 响应标识
      */
     private String responseId;
+    /**
+     * 请求方接口标识符（通知结果时调用，业务系统提供）
+     */
+    private String requestInterfaceId;
+    /**
+     * 回复方接口标识符（发送请求时调用，协同系统提供）
+     */
+    private String responseInterfaceId;
     /**
      * 查询标识
      */
@@ -85,7 +89,7 @@ public class ErrorQueueBank {
     /**
      * 是否忽略
      */
-    private String ignore;
+    private String dismiss;
 
     @Id
     @Column(name = "UUID", nullable = false, unique = true)
@@ -97,15 +101,24 @@ public class ErrorQueueBank {
         this.uuid = uuid;
     }
 
-    @Column(name = "INTERFACE_ID")
-    public String getInterfaceId() {
-        return interfaceId;
+
+    @Column(name = "REQUEST_INTERFACE_ID")
+    public String getRequestInterfaceId() {
+        return requestInterfaceId;
     }
 
-    public void setInterfaceId(String interfaceId) {
-        this.interfaceId = interfaceId;
+    public void setRequestInterfaceId(String requestInterfaceId) {
+        this.requestInterfaceId = requestInterfaceId;
     }
 
+    @Column(name = "RESPONSE_INTERFACE_ID")
+    public String getResponseInterfaceId() {
+        return responseInterfaceId;
+    }
+
+    public void setResponseInterfaceId(String responseInterfaceId) {
+        this.responseInterfaceId = responseInterfaceId;
+    }
 
     @Column(name = "QUERY_ID",unique = true)
     public String getQueryId() {
@@ -243,12 +256,12 @@ public class ErrorQueueBank {
         this.errorMessage = errorMessage;
     }
 
-    @Column(name = "IGNORE",length = 2)
-    public String getIgnore() {
-        return ignore;
+    @Column(name = "DISMISS",length = 2)
+    public String getDismiss() {
+        return dismiss;
     }
 
-    public void setIgnore(String ignore) {
-        this.ignore = ignore;
+    public void setDismiss(String dismiss) {
+        this.dismiss = dismiss;
     }
 }

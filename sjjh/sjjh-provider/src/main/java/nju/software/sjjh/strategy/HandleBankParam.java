@@ -30,7 +30,7 @@ import nju.software.sjjh.util.UuidUtil;
 public class HandleBankParam implements HandleParameter {
 
 	@Override
-	public List<QueueBank> analyticRequestParameter(String jkbsf, String params) {
+	public List<QueueBank> analyticRequestParameter(String requestInterfaceId,String responseInterfaceId, String params) {
 		List<QueueBank> queueBanks = new ArrayList<>();
 		try {
 			Element root = Dom4jUtil.getRooElement(params);
@@ -55,7 +55,7 @@ public class HandleBankParam implements HandleParameter {
 				Map<String, String> zrrMap = Dom4jUtil.getAttributeMap(zrr);
 				for (String bank : banks) {
 					QueueBank queueBank = new QueueBank(
-							UuidUtil.generateUuid(), jkbsf, qqlsh, null,
+							UuidUtil.generateUuid(), requestInterfaceId,responseInterfaceId, qqlsh, null,
 							zrrMap.get("FY_BS"),
 							BankService.STATUS_RECEIVE_REQUEST, "江西高院", bank,
 							new Date(), null, null, null, zrr.asXML(), null,
@@ -68,7 +68,7 @@ public class HandleBankParam implements HandleParameter {
 				Map<String, String> zzjgMap = Dom4jUtil.getAttributeMap(zzjg);
 				for (String bank : banks) {
 					QueueBank queueBank = new QueueBank(
-							UuidUtil.generateUuid(), jkbsf, qqlsh, null,
+							UuidUtil.generateUuid(), requestInterfaceId,responseInterfaceId, qqlsh, null,
 							zzjgMap.get("FY_BS"),
 							BankService.STATUS_RECEIVE_REQUEST, "江西高院", bank,
 							new Date(), null, null, null, zzjg.asXML(), null,
@@ -86,8 +86,7 @@ public class HandleBankParam implements HandleParameter {
 	}
 
 	@Override
-	public List<QueueBank> analyticResponseParameter(String jkbsf,
-			String params, QueueBankDao queueBankDao) {
+	public List<QueueBank> analyticResponseParameter(String params, QueueBankDao queueBankDao) {
 		List<QueueBank> queueBankList=new ArrayList<>();
 		try {
 			Element responseElement = Dom4jUtil.getRooElement(params);

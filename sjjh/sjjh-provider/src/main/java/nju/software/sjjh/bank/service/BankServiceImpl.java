@@ -38,7 +38,7 @@ public class BankServiceImpl implements BankService {
         log.info(params);
         HandleParameter handleParameter=new HandleBankParam();
         try {
-            List<QueueBank> queueBanks =handleParameter.analyticRequestParameter("requestAsyncZhye", params) ;
+            List<QueueBank> queueBanks =handleParameter.analyticRequestParameter("requestAsyncZhye","responseAsyncZhye", params) ;
             for(QueueBank queueBank:queueBanks){
             	queueBankDao.save(queueBank);
             }
@@ -53,7 +53,7 @@ public class BankServiceImpl implements BankService {
     public Result responseAsyncZhye(String params) {
     	 log.info(params);
          HandleParameter handleParameter=new HandleBankParam();
-    	 List<QueueBank> queueBanks =handleParameter.analyticResponseParameter("responseAsyncZhye", params, queueBankDao) ;
+    	 List<QueueBank> queueBanks =handleParameter.analyticResponseParameter(params, queueBankDao) ;
     	 try{
     		 queueBankDao.updateList(queueBanks);
     	 }
