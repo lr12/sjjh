@@ -6,7 +6,7 @@ import nju.software.sjjh.bank.facade.BankWebServiceImpl;
 import nju.software.sjjh.bank.service.BankServiceImpl;
 import nju.software.sjjh.bank.task.BankTask;
 import nju.software.sjjh.service.HelloService;
-import nju.software.sjjh.util.CfxUtil;
+import nju.software.sjjh.util.CxfUtil;
 import nju.software.sjjh.util.WebServiceUtil;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -62,7 +62,7 @@ public class MainTest {
         long t2 = System.currentTimeMillis();
         System.out.println(result+":"+(t2-t1));
         try {
-            Object[] r = CfxUtil.jump("http://192.168.0.103:8892/nju.software.sjjh.mock.GsyhWebService?wsdl", "responseAsyncZhye", "hhhhh");
+            Object[] r = CxfUtil.jump("http://192.168.0.103:8892/nju.software.sjjh.mock.GsyhWebService?wsdl", "responseAsyncZhye", "hhhhh");
             long t3 = System.currentTimeMillis();
             System.out.println(r[0]+":"+(t3-t2));
         } catch (Exception e) {

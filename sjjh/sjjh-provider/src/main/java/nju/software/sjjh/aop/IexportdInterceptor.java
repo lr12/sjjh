@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 
 import lombok.extern.slf4j.Slf4j;
 
+import nju.software.sjjh.util.CxfUtil;
 import nju.software.sjjh.util.WebServiceUtil;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -35,9 +36,10 @@ public class IexportdInterceptor {
 	        System.out.println("退出方法");  
 	        //调用转发的webservice
 	        try{
-	        object=WebServiceUtil.invode("http://localhost:8892/nju.software.sjjh.webservice.IexportdtsService?wsdl","getCaseVod" , "xml", (String)args[0]);
+	        object=CxfUtil.jump("http://localhost:8892/nju.software.sjjh.webservice.IexportdtsService?wsdl","getCaseVod" , (String)args[0])[0];
 	        }
 	        catch (Exception e) {
+	        	System.out.println("抛出异常");
 				e.printStackTrace();
 			}
 	        return object; 
