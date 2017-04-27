@@ -89,6 +89,8 @@ public class BankScheduleServiceImpl implements BankScheduleService {
 
     @Override
     public void sendResponse(int priority) {
+        //根据银行、请求流水号获取已经得到回复的查询（）
+
         //sned resoinse to court
     }
 

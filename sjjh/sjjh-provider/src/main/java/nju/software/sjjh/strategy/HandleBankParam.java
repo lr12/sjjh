@@ -2,7 +2,6 @@ package nju.software.sjjh.strategy;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,6 @@ import org.dom4j.Element;
 import nju.software.sjjh.bank.dao.QueueBankDao;
 import nju.software.sjjh.bank.entity.QueueBank;
 import nju.software.sjjh.bank.service.BankService;
-import nju.software.sjjh.main.Main;
 import nju.software.sjjh.util.Dom4jUtil;
 import nju.software.sjjh.util.SecretUtil;
 import nju.software.sjjh.util.UuidUtil;
@@ -119,12 +117,12 @@ public class HandleBankParam implements HandleParameter {
 					Element zrr = zrrIterator.next();
 					Map<String, String> zrrMap = Dom4jUtil.getAttributeMap(zrr);
 					//根据查询标识和银行标识获取请求队列
-					List<QueueBank> queueBanks=queueBankDao.getRequestByQueryIdAndResponseId( zrrMap.get("FY_BS"),yhbs);
+					List<QueueBank> queueBanks=queueBankDao.getRequestByQueryIdAndReplier(zrrMap.get("FY_BS"),yhbs);
 					if(queueBanks!=null&&queueBanks.size()!=0){
 						QueueBank queueBank=queueBanks.get(0);
 						queueBank.setDecodedResult(zrr.asXML());
 						queueBank.setReceiveResponseTime(receiveDate);
-						queueBank.setResponseId(rwlsl);
+						queueBank.setStatus(BankService.STATUS_RECEIVE_RESPONSE);
 						queueBankList.add(queueBank);
 					}
 					
@@ -134,12 +132,12 @@ public class HandleBankParam implements HandleParameter {
 					Map<String, String> zzjgMap = Dom4jUtil
 							.getAttributeMap(zzjg);
 					//根据查询标识和银行标识获取请求队列
-					List<QueueBank> queueBanks=queueBankDao.getRequestByQueryIdAndResponseId( zzjgMap.get("FY_BS"),yhbs);
+					List<QueueBank> queueBanks=queueBankDao.getRequestByQueryIdAndReplier(zzjgMap.get("FY_BS"),yhbs);
 					if(queueBanks!=null&&queueBanks.size()!=0){
 						QueueBank queueBank=queueBanks.get(0);
 						queueBank.setDecodedResult(zzjg.asXML());
 						queueBank.setReceiveResponseTime(receiveDate);
-						queueBank.setResponseId(rwlsl);
+						queueBank.setStatus(BankService.STATUS_RECEIVE_RESPONSE);
 						queueBankList.add(queueBank);
 					}
 				}

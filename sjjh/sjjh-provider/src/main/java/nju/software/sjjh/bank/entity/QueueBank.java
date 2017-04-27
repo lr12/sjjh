@@ -20,11 +20,11 @@ public class QueueBank {
      */
     private String uuid;
     /**
-     * 请求标识
+     * 请求流水号
      */
     private String requestId;
     /**
-     * 响应标识
+     * 响应流水号
      */
     private String responseId;
     /**
@@ -44,11 +44,11 @@ public class QueueBank {
      */
     private String status;
     /**
-     * 发起方
+     * 发起方--法院标识
      */
     private String requester;
     /**
-     * 回复方
+     * 回复方--银行标识
      */
     private String replier;
     /**
