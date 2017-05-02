@@ -1,3 +1,7 @@
 sjjh/sjjh-provider/sjjh-provider.iml
 sjjh/sjjh-provider/target/
+sjjh/sjjh-provider/.classpath
 .idea/
+logs/
+sjjh/sjjh-provider/logs/
+sjjh/sjjh-provider/sjjh-mock.iml
