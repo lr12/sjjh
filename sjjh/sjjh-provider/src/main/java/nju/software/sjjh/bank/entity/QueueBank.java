@@ -3,6 +3,7 @@ package nju.software.sjjh.bank.entity;
 
 import java.util.Date;
 
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import javax.persistence.*;
  * Created by Nekonekod on 2017/4/17.
  */
 @Entity
+@ToString
 @Table(name = "QUEUE_BANK")
 public class QueueBank {
 

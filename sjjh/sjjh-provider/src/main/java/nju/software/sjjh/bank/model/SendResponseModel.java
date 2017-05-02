@@ -14,16 +14,16 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
- * 一次调用要发送的请求
- * Created by Nekonekod on 2017/4/19.
+ * 一次调用要发送的回复
+ * Created by Nekonekod on 2017/5/2.
  */
 @Slf4j
-public class SendRequestModel {
+public class SendResponseModel {
 
     /**
-     * 回复流水号
+     * 请求流水号
      */
-    private String responseId;
+    private String requestId;
     /**
      * 重组后的xml参数
      */
@@ -31,7 +31,7 @@ public class SendRequestModel {
     /**
      * 重组所对应的queueBank
      */
-    private List<QueueBank> requests;
+    private List<QueueBank> responses;
     /**
      * 接收结果
      */
@@ -42,67 +42,66 @@ public class SendRequestModel {
         return xml;
     }
 
-    public List<QueueBank> getRequests() {
-        return requests;
+    public List<QueueBank> getResponses() {
+        return responses;
     }
 
     public Result getResult() {
         return result;
     }
 
-    public String getResponseId() {
-        return responseId;
+    public String getRequestId() {
+        return requestId;
     }
 
     /**
-     * 重组最大数目
-     */
-    private static final int QUERY_MAXSIZE = 10;
-
-    /**
-     * 重组请求
-     * @param list 所有待发送的查询
-     * @param maxSize 一次调用的最大查询数
+     * 重组回复
+     * @param list 所有待回复记录
      * @return
      */
-    private static List<SendRequestModel> rebuildRequest(List<QueueBank> list, int maxSize){
-        int modelSize = (int) Math.ceil(list.size()/(double)maxSize);
-        List<SendRequestModel> results = new ArrayList<>(modelSize);
-        for (int i=0;i<modelSize;i++){
-            SendRequestModel model = new SendRequestModel();
-            int fromIndex = i * maxSize;
-            int toIndex = Math.min(fromIndex + maxSize,list.size());
-            List<QueueBank> subList = list.subList(fromIndex, toIndex);
-            model.requests = new ArrayList<>(subList);
+    private static List<SendResponseModel> rebuildResponse(List<QueueBank> list){
+        Map<String,SendResponseModel> map = new LinkedHashMap<>();//key:requestId
+        for(QueueBank qb:list){
+            String requestId = qb.getRequestId();
+            //按请求流水号分组
+            if(!map.containsKey(requestId)){
+                SendResponseModel model = new SendResponseModel();
+                model.requestId = requestId;
+                model.responses = new ArrayList<>();
+                map.put(requestId,model);
+            }
+            SendResponseModel model = map.get(requestId);
+            model.responses.add(qb);
+        }
+        //重构xml
+        for(SendResponseModel model:map.values()){
             try {
                 model.xml = rebuildXml(model);
             } catch (Exception e) {
                 model.xml = null;
-                model.result = new Result(0,"重组银行查询请求时发生错误:"+e.getMessage());
-                log.error("重组查询请求时发生错误:"+e.getMessage(),e);
+                model.result = new Result(0,"重组回复请求时发生错误:"+e.getMessage());
+                log.error("重组回复请求时发生错误:"+e.getMessage(),e);
             }
-            results.add(model);
         }
-        return results;
+        return new ArrayList<>(map.values());
     }
 
-    private static String rebuildXml(SendRequestModel model) throws Exception {
-        if(CollectionUtil.isNotEmpty(model.requests)){
+    private static String rebuildXml(SendResponseModel model) throws Exception {
+        if(CollectionUtil.isNotEmpty(model.responses)){
             //创建一个xml文档
             Document document = DocumentHelper.createDocument();
             Element root = DocumentHelper.createElement("request");
             document.setRootElement(root);
-            //TODO 设置 法院_任务流水号
-            model.responseId = UuidUtil.generateUuid();
-            root.addAttribute("FY_RWLSH", model.responseId);
-            for(QueueBank qb:model.requests){
-                Document doc1 = DocumentHelper.parseText(qb.getDecodedParam());
+            root.addAttribute("FY_QQLSH", model.requestId);//添加请求流水号
+            for(QueueBank qb:model.responses){
+                Document doc1 = DocumentHelper.parseText(qb.getDecodedResult());
                 Element ele1 = doc1.getRootElement();
+                ele1.addAttribute("FY_QQYHBS",qb.getReplier()); //添加请求银行标识
                 root.add(ele1);
             }
             return document.asXML();
         }
-        return null ;
+        return null;
     }
 
     /**
@@ -123,32 +122,32 @@ public class SendRequestModel {
     /**
      * 发送请求线程
      */
-    public static class SendRequestCallback implements Callable<List<SendRequestModel>>{
+    public static class SendResponseCallback implements Callable<List<SendResponseModel>>{
         private String tag;
         private String address;
-        private List<QueueBank> allRequsts;
+        private List<QueueBank> allResponses;
 
-        public SendRequestCallback(String tag, String address, List<QueueBank> requsts) {
+        public SendResponseCallback(String tag, String address, List<QueueBank> responses) {
             this.tag = tag;
             this.address = address;
-            this.allRequsts = requsts;
+            this.allResponses = responses;
         }
 
         @Override
-        public List<SendRequestModel> call() throws Exception {
+        public List<SendResponseModel> call() throws Exception {
             log.info(tag);
-            List<SendRequestModel> future = new ArrayList<>();
+            List<SendResponseModel> future = new ArrayList<>();
             //按接口标识分类
-            Map<String,List<QueueBank>> map = SendRequestModel.tellByInterfaceId(this.allRequsts);
+            Map<String,List<QueueBank>> map = SendResponseModel.tellByInterfaceId(this.allResponses);
             for(Map.Entry<String,List<QueueBank>> entry:map.entrySet()){
                 String interfaceId = entry.getKey();
-                List<QueueBank> requests = entry.getValue();
-                //按最大数目分组
-                List<SendRequestModel> models = rebuildRequest(requests, QUERY_MAXSIZE);
-                for(SendRequestModel model:models){
+                List<QueueBank> responses = entry.getValue();
+                //按请求流水号分组重构xml
+                List<SendResponseModel> models = rebuildResponse(responses);
+                for(SendResponseModel model:models){
                     if(StringUtil.isNotBlank(model.xml)){
                         try{
-                            //调用银行ws
+                            //调用ws
 //                            String resultXml = WebServiceUtil.invode(this.address, interfaceId, "params", model.xml);
                             String resultXml = CfxUtil.jump(this.address, interfaceId, model.xml)[0].toString();
                             //set 返回结果

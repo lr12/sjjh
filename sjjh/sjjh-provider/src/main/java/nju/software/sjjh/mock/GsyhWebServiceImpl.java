@@ -14,9 +14,9 @@ public class GsyhWebServiceImpl implements GsyhWebService {
 
     @Override
     public String responseAsyncZhye(String params) {
-        XStream x = new XStream();
-        x.processAnnotations(Result.class);
-        return x.toXML(Result.newErrorResult("测试"));
-//        return FakeBankHandler.responseAsyncZhye(this.getClass().getName(),params);
+//        XStream x = new XStream();
+//        x.processAnnotations(Result.class);
+//        return x.toXML(Result.newErrorResult("测试"));
+        return FakeBankHandler.responseAsyncZhye(this.getClass().getName(),params);
     }
 }

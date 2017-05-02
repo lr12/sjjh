@@ -24,10 +24,15 @@ public class CodeConfigDao extends BaseDao<CodeConfig> {
         return findByProperty("codeType","银行标识");
     }
 
+    public List<CodeConfig> getFys() {
+        return findByProperty("codeType","法院标识");
+    }
 
     @Override
     @CacheEvict(value = "CODE_BANK",allEntries = true)
     public void save(CodeConfig entity) {
         super.save(entity);
     }
+
+
 }
