@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 
 import lombok.extern.slf4j.Slf4j;
 
+import nju.software.sjjh.util.ConstantUtil;
 import nju.software.sjjh.util.CxfUtil;
 import nju.software.sjjh.util.WebServiceUtil;
 
@@ -24,19 +25,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class IexportdInterceptor {
 
-	 @Pointcut("execution(* nju.software.sjjh.webservice.IexportdtsServiceImpl.sayHello(..))")  
+	 @Pointcut("execution(* nju.software.sjjh.webservice.IexportdtsServiceImpl.*(..))")  
 	 private void anyMethod(){}//定义一个切入点 
 	
 	 @Around("anyMethod()")  
 	 public Object aroundMethod(ProceedingJoinPoint pjp) throws Throwable{  
-	        System.out.println("进入环绕通知");
+	        log.info("进入环绕通知");
 	        String methodName = pjp.getSignature().getName();
 	        Object[] args=pjp.getArgs();
+	        log.info("aop调用的方法:"+methodName);
 	        Object object = pjp.proceed();//执行该方法  
-	        System.out.println("退出方法");  
+	        log.info("退出方法");  
 	        //调用转发的webservice
 	        try{
-	        object=CxfUtil.jump("http://localhost:8892/nju.software.sjjh.webservice.IexportdtsService?wsdl","getCaseVod" , (String)args[0])[0];
+	        object=CxfUtil.jump(ConstantUtil.kjftWsdl,methodName , (String)args[0])[0];
 	        }
 	        catch (Exception e) {
 	        	System.out.println("抛出异常");

@@ -149,7 +149,7 @@ public class SendResponseModel {
                         try{
                             //调用ws
 //                            String resultXml = WebServiceUtil.invode(this.address, interfaceId, "params", model.xml);
-                            String resultXml = CfxUtil.jump(this.address, interfaceId, model.xml)[0].toString();
+                            String resultXml = CxfUtil.jump(this.address, interfaceId, model.xml)[0].toString();
                             //set 返回结果
                             model.result = XmlUtil.toBean(resultXml, Result.class);
                         }catch (Exception e){
