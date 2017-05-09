@@ -18,27 +18,15 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
+	>
 
     <dubbo:application name="court-provider" owner="nju-software" organization="dubbox"/>
 
     <dubbo:registry address="zookeeper://141.1.8.52:2181"/>
 
-    <!--uncomment this if you want to test dubbo's monitor-->
-    <!--<dubbo:monitor protocol="registry"/>-->
+    <dubbo:annotation package="nju.software.sjjh.zzfw" />
 
-    <!-- here we demonstrate both annotation-based and xml-based configs -->
-    <dubbo:annotation package="nju.software.sjjh.bank.facade" />
-    <dubbo:annotation package="nju.software.sjjh.webservice" />
-    <!-- 测试:模拟银行的ws-->
-    <dubbo:annotation package="nju.software.sjjh.mock" />
-    <!--<dubbo:protocol name="dubbo" serialization="kryo" optimizer="com.alibaba.dubbo.demo.SerializationOptimizerImpl"/>-->
-    <!--<dubbo:protocol name="dubbo" serialization="fst" optimizer="com.alibaba.dubbo.demo.SerializationOptimizerImpl"/>-->
-
-    <!--<dubbo:protocol name="dubbo" serialization="nativejava"/>-->
-    <!--<dubbo:protocol name="dubbo" serialization="hessian2"/>-->
-    <!--<dubbo:protocol name="dubbo" serialization="fastjson"/>-->
-    <dubbo:protocol name="dubbo" serialization="dubbo"/>
 
 
     <!--TODO according to the spring convention, we should use something like keep-alive-->
@@ -48,9 +36,7 @@
     <!-- use tjws server -->
     <!--<dubbo:protocol name="rest" port="8888" server="tjws" contextpath="services"/>-->
 
-    <!-- use tomcat server -->
-    <dubbo:protocol name="rest" port="8888" threads="500" contextpath="services" server="tomcat" accepts="500"
-                    extension="com.alibaba.dubbo.rpc.protocol.rest.support.LoggingFilter"/>
+
 
     <!-- use the external tomcat or other server with the servlet approach; the port and contextpath must be exactly the same as those in external server -->
     <!--<dubbo:protocol name="rest" port="8888" contextpath="services" server="servlet"/>-->
@@ -58,5 +44,11 @@
     <dubbo:protocol name="http" port="8889"/>
     <dubbo:protocol name="hessian" port="8890"/>
     <dubbo:protocol name="webservice" port="8892"/>
+
+    <!-- 用户服务接口 -->
+    <!-- retries表示失败后的重试次数，timeout表示超时时间，actives表示客户端并发限制数 服务端并发控制可用executes参数 -->
+    <dubbo:reference id="iexportdtsService" interface="nju.software.sjjh.webservice.IexportdtsService" >
+
+    </dubbo:reference>
 
 </beans>
