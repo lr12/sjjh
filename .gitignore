@@ -5,3 +5,4 @@ sjjh/sjjh-provider/.classpath
 logs/
 sjjh/sjjh-provider/logs/
 sjjh/sjjh-provider/sjjh-mock.iml
+sjjh/sjjh-provider/src/main/resources/properties/
