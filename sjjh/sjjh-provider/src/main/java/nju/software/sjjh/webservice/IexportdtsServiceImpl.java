@@ -63,12 +63,12 @@ public class IexportdtsServiceImpl implements IexportdtsService {
 	public String getCaseVod(String xml) {
 		//String result=null;
 		
-		return "lirui";
+		return null;
 	}
 
 	@Override
 	public String sayHello(String xml) {
-	    System.out.println(xml);
+	   // System.out.println(xml);
 		return "hello";
 	}
 

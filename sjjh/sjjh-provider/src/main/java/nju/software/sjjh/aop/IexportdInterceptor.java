@@ -15,6 +15,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 
+
+
 /**
  * aop拦截
  * @author lr12
@@ -39,8 +41,12 @@ public class IexportdInterceptor {
 	        //调用转发的webservice
 	        try{
 	        object=CxfUtil.jump(ConstantUtil.kjftWsdl,methodName , (String)args[0])[0];
+	        CxfUtil.notifySjjhpt(new String[]{"kjft","1234","dqc583sb7wmja6nj11wbbwm4snpcq5ov",methodName,"3","",(String)args[0],""});
+	        
+	        
 	        }
 	        catch (Exception e) {
+	            CxfUtil.notifySjjhpt(new String[]{"kjft","1234","dqc583sb7wmja6nj11wbbwm4snpcq5ov",methodName,"4","调用wsdl有问题",(String)args[0],""});
 	        	System.out.println("抛出异常");
 				e.printStackTrace();
 			}
