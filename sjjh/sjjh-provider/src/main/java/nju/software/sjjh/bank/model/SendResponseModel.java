@@ -149,7 +149,7 @@ public class SendResponseModel {
                         try{
                             //调用ws
 //                            String resultXml = WebServiceUtil.invode(this.address, interfaceId, "params", model.xml);
-                            String encodedXml = model.xml;//对整个xml加密后调用法院ws
+                            String encodedXml = EncodeUtil.decode(model.xml);//对整个xml加密后调用法院ws
                             String resultXml = CxfUtil.jump(this.address, interfaceId, encodedXml)[0].toString();
                             //set 返回结果
                             model.result = XmlUtil.toBean(resultXml, Result.class);
