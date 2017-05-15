@@ -25,26 +25,26 @@ public class BankErrorHandlerTask {
     private BankErrorHandlerScheduleService bankErrorHandlerScheduleService;
 
     @Scheduled(cron = "0 0 0/1 * * ?")
-    public void sendRequestDefault() {
+    public void sendErrorRequestDefault() {
         log.info("BankErrorHandlerTask : resendRequest");
         bankErrorHandlerScheduleService.resendRequest(BankService.PRIORITY_DEFAULT);
     }
     
     @Scheduled(cron = "0 0 0/1 * * ?")
-    public void sendResponseDefault() {
+    public void sendErrorResponseDefault() {
         log.info("BankErrorHandlerTask : resendResponse");
         bankErrorHandlerScheduleService.resendResponse(BankService.PRIORITY_DEFAULT);
     }
 
     @Scheduled(cron = "0 0/15 *  * * ?")
-    public void sendRequestHigh() {
+    public void sendErrorRequestHigh() {
         log.info("BankErrorHandlerTask : resendRequest");
         bankErrorHandlerScheduleService.resendRequest(BankService.PRIORITY_HIGH);
     }
 
 
     @Scheduled(cron = "0 0/15 *  * * ?")
-    public void sendResponseHigh() {
+    public void sendErrorResponseHigh() {
         log.info("BankErrorHandlerTask : resendResponse");
         bankErrorHandlerScheduleService.resendResponse(BankService.PRIORITY_HIGH);
     }

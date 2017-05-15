@@ -6,6 +6,7 @@ import nju.software.sjjh.util.*;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.jboss.resteasy.util.Encode;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -150,7 +151,9 @@ public class SendRequestModel {
                         try{
                             //调用银行ws
 //                            String resultXml = WebServiceUtil.invode(this.address, interfaceId, "params", model.xml);
-                            String resultXml = CxfUtil.jump(this.address, interfaceId, model.xml)[0].toString();
+                            //对整个xml进行加密后调用银行ws
+                            String encodedXml = EncodeUtil.encode(model.xml);
+                            String resultXml = CxfUtil.jump(this.address, interfaceId, encodedXml)[0].toString();
                             //set 返回结果
                             model.result = XmlUtil.toBean(resultXml, Result.class);
                         }catch (Exception e){
