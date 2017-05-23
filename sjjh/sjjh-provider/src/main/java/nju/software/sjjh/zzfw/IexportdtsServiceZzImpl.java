@@ -1,12 +1,14 @@
 package nju.software.sjjh.zzfw;
 
 import javax.annotation.Resource;
+import javax.jws.WebService;
 
 import lombok.extern.slf4j.Slf4j;
 
 import com.alibaba.dubbo.config.annotation.Service;
 
 import nju.software.sjjh.webservice.IexportdtsService;
+
 @Slf4j
 @Service(protocol = {"webservice"})
 public class IexportdtsServiceZzImpl implements IexportdtsServiceZz{
@@ -56,7 +58,7 @@ public class IexportdtsServiceZzImpl implements IexportdtsServiceZz{
 		return iexportdtsService.updateTrialInfo(xml);
 	}
 
-	@Override
+/*	@Override
 	public String getCaseVod(String xml) {
 		
 		return iexportdtsService.getCaseVod(xml);
@@ -66,6 +68,6 @@ public class IexportdtsServiceZzImpl implements IexportdtsServiceZz{
 	public String sayHello(String xml) {
 	//	System.out.println(iexportdtsService);
 		return iexportdtsService.sayHello(xml);
-	}
+	}*/
 
 }

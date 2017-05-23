@@ -1,10 +1,13 @@
 package nju.software.sjjh.zzfw;
 
+import javax.jws.WebService;
+
 /**
  * 中转服务
  * @author lr12
  *
  */
+
 public interface IexportdtsServiceZz {
 
 	/**
@@ -59,16 +62,16 @@ public interface IexportdtsServiceZz {
 	public String updateTrialInfo(String xml);
 	
 	
-	/**
+/*	*//**
 	 * 获取庭审录像接口
 	 * @param xml
 	 * @return
-	 */
+	 *//*
 	public String getCaseVod(String xml);
 	
-	/**
+	*//**
 	 * 测试
 	 * @return
-	 */
-	public String sayHello(String xml);
+	 *//*
+	public String sayHello(String xml);*/
 }
