@@ -48,6 +48,7 @@ public class HandleBankParam implements HandleParameter {
 					.getCurrentNameIeraIterator(decodeElement, "zrr");
 			Iterator<Element> zzjgIterator = Dom4jUtil
 					.getCurrentNameIeraIterator(decodeElement, "zzjg");
+			Date receive_timeDate=new Date();
 			while (zrrIterator.hasNext()) {
 				Element zrr = zrrIterator.next();
 				Map<String, String> zrrMap = Dom4jUtil.getAttributeMap(zrr);
@@ -56,7 +57,7 @@ public class HandleBankParam implements HandleParameter {
 							UuidUtil.generateUuid(), requestInterfaceId,responseInterfaceId, qqlsh, null,
 							zrrMap.get("FY_BS"),
 							BankService.STATUS_RECEIVE_REQUEST, "江西高院", bank,
-							new Date(), null, null, null, zrr.asXML(), null,
+							receive_timeDate, null, null, null, zrr.asXML(), null,
 							Integer.valueOf(yxj));
 					queueBanks.add(queueBank);
 				}
@@ -69,7 +70,7 @@ public class HandleBankParam implements HandleParameter {
 							UuidUtil.generateUuid(), requestInterfaceId,responseInterfaceId, qqlsh, null,
 							zzjgMap.get("FY_BS"),
 							BankService.STATUS_RECEIVE_REQUEST, "江西高院", bank,
-							new Date(), null, null, null, zzjg.asXML(), null,
+							receive_timeDate, null, null, null, zzjg.asXML(), null,
 							Integer.valueOf(yxj));
 					queueBanks.add(queueBank);
 				}
@@ -122,6 +123,7 @@ public class HandleBankParam implements HandleParameter {
 						QueueBank queueBank=queueBanks.get(0);
 						queueBank.setDecodedResult(zrr.asXML());
 						queueBank.setReceiveResponseTime(receiveDate);
+						queueBank.setResponseId(rwlsl);
 						queueBank.setStatus(BankService.STATUS_RECEIVE_RESPONSE);
 						queueBankList.add(queueBank);
 					}
@@ -137,6 +139,7 @@ public class HandleBankParam implements HandleParameter {
 						QueueBank queueBank=queueBanks.get(0);
 						queueBank.setDecodedResult(zzjg.asXML());
 						queueBank.setReceiveResponseTime(receiveDate);
+						queueBank.setResponseId(rwlsl);
 						queueBank.setStatus(BankService.STATUS_RECEIVE_RESPONSE);
 						queueBankList.add(queueBank);
 					}

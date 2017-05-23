@@ -283,7 +283,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>nju.software.sjjh.main.Main</mainClass>
+                            <mainClass>nju.software.sjjh.test.Test</mainClass>
                             <addClasspath>true</addClasspath>
                             <!-- classPath加前缀 -->
                             <classpathPrefix>lib/</classpathPrefix>
